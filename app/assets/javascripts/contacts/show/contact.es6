@@ -22,12 +22,25 @@ class Contact extends React.Component {
 
   componentDidMount() {
     this.reloadFromBackend()
+
+    App.cable.subscriptions.create({ channel: "ContactsChannel", id: this.props.id }, {
+      received: this.onChannelReceived.bind(this)
+    })
   }
 
   componentDidUpdate(prevProps) {
     if(prevProps.id != this.props.id) {
       this.reloadFromBackend()
     }
+  }
+
+  onChannelReceived(data) {
+    console.log(data);
+
+    this.reloadFromBackend()
+    setTimeout(() => {
+      this.props.reloadIndexFromBackend(false)
+    }, window.backendRefreshDelay)
   }
 
   contactPath() {
@@ -112,9 +125,7 @@ class Contact extends React.Component {
                        search={this.props.search}
                        contactPath={this.contactPath()}
                        fieldOptionsPath={this.props.fieldOptionsPath}
-                       toggleEditMode={this.toggleGeneralEditMode.bind(this)}
-                       reloadFromBackend={this.reloadFromBackend.bind(this)}
-                       reloadIndexFromBackend={this.props.reloadIndexFromBackend}  />
+                       toggleEditMode={this.toggleGeneralEditMode.bind(this)} />
         )
       }
       else {

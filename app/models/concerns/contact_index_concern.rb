@@ -34,10 +34,14 @@ module ContactIndexConcern
   end
 
   def after_commit_callback
+    # ElasticSearch
     __elasticsearch__.index_document
     organizations.import
     projects.import
     events.import
+
+    # Websockets
+    ActionCable.server.broadcast("contacts_#{id}", { :refresh => true })
   end
 
   def around_destroy_callback
@@ -52,6 +56,9 @@ module ContactIndexConcern
     Organization.where(:id => saved_organization_ids).import
     Project.where(:id => saved_project_ids).import
     Event.where(:id => saved_event_ids).import
+
+    # Websockets
+    ActionCable.server.broadcast("contacts_#{id}", { :refresh => true })
   end
 
   def as_indexed_json(options = {})

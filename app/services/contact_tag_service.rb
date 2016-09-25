@@ -29,6 +29,9 @@ class ContactTagService
     # reindex contact
     @contact.__elasticsearch__.index_document
 
+    # websockets
+    ActionCable.server.broadcast("contacts_#{@contact.id}", { :refresh => true })
+
     tag
   end
 
@@ -44,6 +47,9 @@ class ContactTagService
 
     # reindex contact
     @contact.__elasticsearch__.index_document
+
+    # websockets
+    ActionCable.server.broadcast("contacts_#{@contact.id}", { :refresh => true })
   end
 
   def self.cleanup_orphan_tags(lab)

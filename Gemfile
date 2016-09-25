@@ -24,6 +24,9 @@ gem 'browserify-rails'
 gem 'rmagick'
 gem 'carrierwave'
 
+# Use Redis adapter to run Action Cable in production
+gem 'redis', '~> 3.0'
+
 # Utils
 gem 'enumerize'
 gem 'factory_girl'
