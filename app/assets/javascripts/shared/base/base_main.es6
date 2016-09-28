@@ -41,7 +41,9 @@ class BaseMain extends React.Component {
         else if(camelData.action == 'update') {
           var newItems = this.state[`${this.itemType}s`]
           var index       = _.findIndex(newItems, (item) => { return itemId == item.id })
+          var wasSelected = newItems[index].selected
           newItems[index] = camelData.item
+          newItems[index].selected = wasSelected // to keep selection when updated (only useful for contacts for now)
 
           var newState = {}
           newState[`${this.itemType}s`] = newItems
