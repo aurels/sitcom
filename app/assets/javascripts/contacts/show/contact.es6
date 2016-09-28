@@ -25,10 +25,25 @@ class Contact extends React.Component {
       this.reloadFromBackend()
     }
     else {
-      window.scrollTo(0, 0);
+      window.scrollTo(0, 0)
     }
 
     this.bindCable()
+  }
+
+  componentDidUpdate(prevProps) {
+    if(prevProps.id != this.props.id) {
+      if(this.state.contact == undefined) {
+        this.reloadFromBackend()
+      }
+      else {
+        window.scrollTo(0, 0)
+        this.setState({
+          contact: this.props.contact,
+          loaded:  this.props.contact != undefined
+        })
+      }
+    }
   }
 
   bindCable() {

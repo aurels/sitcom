@@ -21,10 +21,25 @@ class Organization extends React.Component {
       this.reloadFromBackend()
     }
     else {
-      window.scrollTo(0, 0);
+      window.scrollTo(0, 0)
     }
 
     this.bindCable()
+  }
+
+  componentDidUpdate(prevProps) {
+    if(prevProps.id != this.props.id) {
+      if(this.state.organization == undefined) {
+        this.reloadFromBackend()
+      }
+      else {
+        window.scrollTo(0, 0)
+        this.setState({
+          organization: this.props.organization,
+          loaded:       this.props.organization != undefined
+        })
+      }
+    }
   }
 
   bindCable() {

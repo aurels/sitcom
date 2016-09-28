@@ -21,10 +21,25 @@ class Project extends React.Component {
       this.reloadFromBackend()
     }
     else {
-      window.scrollTo(0, 0);
+      window.scrollTo(0, 0)
     }
 
     this.bindCable()
+  }
+
+  componentDidUpdate(prevProps) {
+    if(prevProps.id != this.props.id) {
+      if(this.state.project == undefined) {
+        this.reloadFromBackend()
+      }
+      else {
+        window.scrollTo(0, 0)
+        this.setState({
+          project: this.props.project,
+          loaded:  this.props.project != undefined
+        })
+      }
+    }
   }
 
   bindCable() {

@@ -21,10 +21,25 @@ class Event extends React.Component {
       this.reloadFromBackend()
     }
     else {
-      window.scrollTo(0, 0);
+      window.scrollTo(0, 0)
     }
 
     this.bindCable()
+  }
+
+  componentDidUpdate(prevProps) {
+    if(prevProps.id != this.props.id) {
+      if(this.state.event == undefined) {
+        this.reloadFromBackend()
+      }
+      else {
+        window.scrollTo(0, 0)
+        this.setState({
+          event:  this.props.event,
+          loaded: this.props.event != undefined
+        })
+      }
+    }
   }
 
   bindCable() {
