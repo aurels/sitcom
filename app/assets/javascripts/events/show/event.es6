@@ -136,8 +136,8 @@ class Event extends React.Component {
     if(this.state.loaded) {
       return (
         <NotesBlock notable={this.state.event}
-                    reloadFromBackend={this.reloadFromBackend.bind(this)}
-                    canWrite={this.props.permissions.canWriteEvents} />
+                    canWrite={this.props.permissions.canWriteEvents}
+                    currentUserId={this.props.currentUserId} />
       )
     }
   }

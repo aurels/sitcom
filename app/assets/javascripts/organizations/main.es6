@@ -45,8 +45,10 @@ class Main extends BaseMain {
 
   renderItem() {
     return (
-      <Organization id={this.props.params.id}
+      <Organization id={parseInt(this.props.params.id)}
                     permissions={this.props.permissions}
+                    currentUserId={this.props.currentUserId}
+                    labId={this.props.labId}
                     loaded={this.state.loaded}
                     organizationsPath={this.props.organizationsPath}
                     search={this.props.location.search}

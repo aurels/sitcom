@@ -1,9 +1,5 @@
 class ContactsChannel < ApplicationCable::Channel
   def subscribed
-    if params[:id]
-      stream_from "contacts_#{params[:id]}"
-    else
-      stream_from "contacts"
-    end
+    stream_from "contacts_#{params[:lab_id]}"
   end
 end

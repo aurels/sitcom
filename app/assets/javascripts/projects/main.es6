@@ -42,8 +42,10 @@ class Main extends BaseMain {
 
   renderItem() {
     return (
-      <Project id={this.props.params.id}
+      <Project id={parseInt(this.props.params.id)}
                permissions={this.props.permissions}
+               currentUserId={this.props.currentUserId}
+               labId={this.props.labId}
                loaded={this.state.loaded}
                projectsPath={this.props.projectsPath}
                search={this.props.location.search}

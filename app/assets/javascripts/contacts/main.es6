@@ -104,8 +104,10 @@ class Main extends BaseMain {
 
   renderItem() {
     return (
-      <Contact id={this.props.params.id}
+      <Contact id={parseInt(this.props.params.id)}
                permissions={this.props.permissions}
+               currentUserId={this.props.currentUserId}
+               labId={this.props.labId}
                loaded={this.state.loaded}
                contactsPath={this.props.contactsPath}
                search={this.props.location.search}

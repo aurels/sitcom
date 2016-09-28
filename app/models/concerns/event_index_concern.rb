@@ -28,18 +28,13 @@ module EventIndexConcern
   end
 
   def after_commit_callback
-    __elasticsearch__.index_document
-    contacts.import
+    ReindexEventWorker.perform_async(id)
   end
 
   def around_destroy_callback
     saved_contact_ids = contacts.pluck(:id)
-
     yield
-
-    __elasticsearch__.delete_document
-
-    Contact.where(:id => saved_contact_ids).import
+    ReindexEventWorker.perform_async(id, 'delete', saved_contact_ids)
   end
 
   def as_indexed_json(options = {})
@@ -49,11 +44,11 @@ module EventIndexConcern
       :path        => path,
       :scoped_path => scoped_path,
 
-      :name                => name,
-      :happens_on          => happens_on,
-      :place               => place,
-      :description         => description,
-      :website_url         => website_url,
+      :name        => name,
+      :happens_on  => happens_on,
+      :place       => place,
+      :description => description,
+      :website_url => website_url,
 
       :picture_url         => picture_url,
       :preview_picture_url => picture_url(:preview),

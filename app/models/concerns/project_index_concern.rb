@@ -27,18 +27,13 @@ module ProjectIndexConcern
   end
 
   def after_commit_callback
-    __elasticsearch__.index_document
-    contacts.import
+    ReindexProjectWorker.perform_async(id)
   end
 
   def around_destroy_callback
     saved_contact_ids = contacts.pluck(:id)
-
     yield
-
-    __elasticsearch__.delete_document
-
-    Contact.where(:id => saved_contact_ids).import
+    ReindexProjectWorker.perform_async(id, 'delete', saved_contact_ids)
   end
 
   def as_indexed_json(options = {})
@@ -48,10 +43,10 @@ module ProjectIndexConcern
       :path        => path,
       :scoped_path => scoped_path,
 
-      :name                => name,
-      :description         => description,
-      :start_date          => start_date,
-      :end_date            => end_date,
+      :name        => name,
+      :description => description,
+      :start_date  => start_date,
+      :end_date    => end_date,
 
       :picture_url         => picture_url,
       :preview_picture_url => picture_url(:preview),

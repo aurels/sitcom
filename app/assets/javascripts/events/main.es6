@@ -34,26 +34,28 @@ class Main extends BaseMain {
 
   renderItems() {
     return (
-            <Events events={this.state.events}
-                    loaded={this.state.loaded}
-                    search={this.props.location.search}
-                    loadingImagePath={this.props.loadingImagePath} />
-          )
+      <Events events={this.state.events}
+              loaded={this.state.loaded}
+              search={this.props.location.search}
+              loadingImagePath={this.props.loadingImagePath} />
+    )
   }
 
   renderItem() {
     return (
-            <Event id={this.props.params.id}
-                   permissions={this.props.permissions}
-                   loaded={this.state.loaded}
-                   eventsPath={this.props.eventsPath}
-                   search={this.props.location.search}
-                   loadingImagePath={this.props.loadingImagePath}
-                   contactOptionsPath={this.props.contactOptionsPath}
-                   reloadIndexFromBackend={this.reloadFromBackend.bind(this)}
-                   events={this.state.events}
-                   router={this.props.router} />
-          )
+      <Event id={parseInt(this.props.params.id)}
+             permissions={this.props.permissions}
+             currentUserId={this.props.currentUserId}
+             labId={this.props.labId}
+             loaded={this.state.loaded}
+             eventsPath={this.props.eventsPath}
+             search={this.props.location.search}
+             loadingImagePath={this.props.loadingImagePath}
+             contactOptionsPath={this.props.contactOptionsPath}
+             reloadIndexFromBackend={this.reloadFromBackend.bind(this)}
+             events={this.state.events}
+             router={this.props.router} />
+    )
   }
 
   renderNewModal() {

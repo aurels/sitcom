@@ -17,6 +17,7 @@ class BaseMain extends React.Component {
     else
       this.reloadFromBackend()
 
+    this.bindCable()
     this.selectHeaderMenu()
   }
 
@@ -26,10 +27,39 @@ class BaseMain extends React.Component {
     }
   }
 
+  bindCable() {
+    App.cable.subscriptions.create({ channel: `${_.upperFirst(this.itemType)}sChannel`, lab_id: this.props.labId }, {
+      received: (data) => {
+        var camelData = humps.camelizeKeys(data)
+        var itemId    = camelData.action == 'destroy' ? camelData.itemId : camelData.item.id
+
+        if(camelData.action == 'create') {
+          setTimeout(() => {
+            this.reloadFromBackend(false)
+          }, window.backendRefreshDelay)
+        }
+        else if(camelData.action == 'update') {
+          var newItems = this.state[`${this.itemType}s`]
+          var index       = _.findIndex(newItems, (item) => { return itemId == item.id })
+          newItems[index] = camelData.item
+
+          var newState = {}
+          newState[`${this.itemType}s`] = newItems
+          this.setState(newState)
+        }
+        else if(camelData.action == 'destroy') {
+          var newState = {}
+          newState[`${this.itemType}s`] = _.filter(this.state[`${this.itemType}s`], (item) => { return itemId != item.id })
+          this.setState(newState)
+        }
+      }
+    })
+  }
+
   shouldUseLocalStorage() {
     var emptyFilters      = this.isEmptyFilters()
     var existingStorage   = localStorage.getItem(`${this.itemType}s`)
-    var storageNotExpired = localStorage.getItem(`${this.itemType}s-lastSync`) && Date.now() - parseInt(localStorage.getItem(`${this.itemType}s-lastSync`)) < 5 * 60 * 1000 // 5 minutes
+    var storageNotExpired = localStorage.getItem(`${this.itemType}s-lastSync`) && Date.now() - parseInt(localStorage.getItem(`${this.itemType}s-lastSync`)) < 0 //5 * 60 * 1000 // 5 minutes
 
     return emptyFilters && existingStorage && storageNotExpired
   }

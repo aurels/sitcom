@@ -27,18 +27,13 @@ module OrganizationIndexConcern
   end
 
   def after_commit_callback
-    __elasticsearch__.index_document
-    contacts.import
+    ReindexOrganizationWorker.perform_async(id)
   end
 
   def around_destroy_callback
     saved_contact_ids = contacts.pluck(:id)
-
     yield
-
-    __elasticsearch__.delete_document
-
-    Contact.where(:id => saved_contact_ids).import
+    ReindexOrganizationWorker.perform_async(id, 'delete', saved_contact_ids)
   end
 
   def as_indexed_json(options = {})

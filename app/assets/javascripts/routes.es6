@@ -36,6 +36,8 @@ class Routes extends React.Component {
       <Router history={this.browserHistory}>
         <Route path="/contacts" component={ContactsWrapper}
                                 permissions={this.props.permissions}
+                                currentUserId={this.props.currentUserId}
+                                labId={this.props.labId}
                                 contactsPath={this.props.contactsPath}
                                 organizationOptionsPath={this.props.organizationOptionsPath}
                                 projectOptionsPath={this.props.projectOptionsPath}
@@ -44,39 +46,41 @@ class Routes extends React.Component {
                                 fieldOptionsPath={this.props.fieldOptionsPath}
                                 loadingImagePath={this.props.loadingImagePath}>
 
-          <Route path=":id" component={ContactsWrapper}
-                            permissions={this.props.permissions} />
+          <Route path=":id" component={ContactsWrapper} />
         </Route>
 
         <Route path="/organizations" component={OrganizationsWrapper}
                                      permissions={this.props.permissions}
+                                     currentUserId={this.props.currentUserId}
+                                     labId={this.props.labId}
                                      organizationsPath={this.props.organizationsPath}
                                      contactOptionsPath={this.props.contactOptionsPath}
                                      loadingImagePath={this.props.loadingImagePath}
                                      organizationStatusesOptionsPath={this.props.organizationStatusesOptionsPath}>
 
-          <Route path=":id" component={OrganizationsWrapper}
-                            permissions={this.props.permissions} />
+          <Route path=":id" component={OrganizationsWrapper} />
         </Route>
 
         <Route path="/projects" component={ProjectsWrapper}
                                 permissions={this.props.permissions}
+                                currentUserId={this.props.currentUserId}
+                                labId={this.props.labId}
                                 projectsPath={this.props.projectsPath}
                                 contactOptionsPath={this.props.contactOptionsPath}
                                 loadingImagePath={this.props.loadingImagePath}>
 
-          <Route path=":id" component={ProjectsWrapper}
-                            permissions={this.props.permissions} />
+          <Route path=":id" component={ProjectsWrapper} />
         </Route>
 
         <Route path="/events" component={EventsWrapper}
                               permissions={this.props.permissions}
+                              currentUserId={this.props.currentUserId}
+                              labId={this.props.labId}
                               eventsPath={this.props.eventsPath}
                               contactOptionsPath={this.props.contactOptionsPath}
                               loadingImagePath={this.props.loadingImagePath}>
 
-          <Route path=":id" component={EventsWrapper}
-                            permissions={this.props.permissions} />
+          <Route path=":id" component={EventsWrapper} />
         </Route>
       </Router>
     )

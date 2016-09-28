@@ -136,8 +136,8 @@ class Organization extends React.Component {
     if(this.state.loaded) {
       return (
         <NotesBlock notable={this.state.organization}
-                    reloadFromBackend={this.reloadFromBackend.bind(this)}
-                    canWrite={this.props.permissions.canWriteOrganizations} />
+                    canWrite={this.props.permissions.canWriteOrganizations}
+                    currentUserId={this.props.currentUserId} />
       )
     }
   }
