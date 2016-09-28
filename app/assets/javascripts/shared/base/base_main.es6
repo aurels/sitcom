@@ -123,12 +123,12 @@ class BaseMain extends React.Component {
   updateUrl(newValues) {
     var query        = _.assign({}, this.props.location.query, newValues)
     var paramsString = ParamsService.rejectEmptyParams($.param(query))
-    this.props.route.router.push(`${this.itemType}s?${paramsString}`)
+    this.props.router.push(`${this.itemType}s?${paramsString}`)
   }
 
   replaceUrl(newValues) {
     var paramsString = ParamsService.rejectEmptyParams($.param(newValues))
-    this.props.route.router.push(`${this.itemType}s?${paramsString}`)
+    this.props.router.push(`${this.itemType}s?${paramsString}`)
   }
 
   updateQuickSearch(newQuickSearch) {
@@ -209,7 +209,7 @@ class BaseMain extends React.Component {
     const savedSearchesPath = `${pathPrefix}/saved_searches`
 
     return(
-      <this.SavedSearches router={this.props.route.router}
+      <this.SavedSearches router={this.props.router}
                           search={this.props.location.search}
                           itemType={this.itemType}
                           savedSearchesPath={savedSearchesPath} />
