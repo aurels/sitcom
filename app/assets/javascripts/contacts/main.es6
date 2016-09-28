@@ -15,7 +15,7 @@ class Main extends BaseMain {
     this.newButtonLabel = 'Nouveau contact'
     this.SavedSearches  = SavedSearches
     this.AdvancedSearch = AdvancedSearch
-    this.exportUrl      = `${this.props.contactsPath}/export`
+    this.exportUrl      = `${this.props.route.contactsPath}/export`
 
     this.state = {
       contacts:      [],
@@ -67,18 +67,18 @@ class Main extends BaseMain {
                    exportUrl={this.exportUrl}
                    selectedCount={this.state.selectedCount}
                    contacts={this.state.contacts}
-                   tagOptionsPath={this.props.tagOptionsPath} />
+                   tagOptionsPath={this.props.route.tagOptionsPath} />
     )
   }
 
   renderItems() {
     return (
-      <Contacts permissions={this.props.permissions}
+      <Contacts permissions={this.props.route.permissions}
                 contacts={this.state.contacts}
                 loaded={this.state.loaded}
                 search={this.props.location.search}
-                tagOptionsPath={this.props.tagOptionsPath}
-                loadingImagePath={this.props.loadingImagePath}
+                tagOptionsPath={this.props.route.tagOptionsPath}
+                loadingImagePath={this.props.route.loadingImagePath}
                 updateSelected={this.updateSelected.bind(this)}
                 pushTagIdsFilter={this.pushIdsListFilter.bind(this, 'tagIds')}
                 pushFieldIdsFilter={this.pushIdsListFilter.bind(this, 'fieldIds')} />
@@ -92,18 +92,18 @@ class Main extends BaseMain {
     return (
       <Contact id={urlContactId}
                contact={contact}
-               permissions={this.props.permissions}
-               currentUserId={this.props.currentUserId}
-               labId={this.props.labId}
+               permissions={this.props.route.permissions}
+               currentUserId={this.props.route.currentUserId}
+               labId={this.props.route.labId}
                loaded={this.state.loaded}
-               contactsPath={this.props.contactsPath}
+               contactsPath={this.props.route.contactsPath}
                search={this.props.location.search}
-               loadingImagePath={this.props.loadingImagePath}
-               tagOptionsPath={this.props.tagOptionsPath}
-               fieldOptionsPath={this.props.fieldOptionsPath}
-               organizationOptionsPath={this.props.organizationOptionsPath}
-               projectOptionsPath={this.props.projectOptionsPath}
-               eventOptionsPath={this.props.eventOptionsPath}
+               loadingImagePath={this.props.route.loadingImagePath}
+               tagOptionsPath={this.props.route.tagOptionsPath}
+               fieldOptionsPath={this.props.route.fieldOptionsPath}
+               organizationOptionsPath={this.props.route.organizationOptionsPath}
+               projectOptionsPath={this.props.route.projectOptionsPath}
+               eventOptionsPath={this.props.route.eventOptionsPath}
                contacts={this.state.contacts}
                router={this.props.router} />
     )
@@ -111,7 +111,7 @@ class Main extends BaseMain {
 
   renderNewModal() {
     return (
-      <NewContact contactsPath={this.props.contactsPath}
+      <NewContact contactsPath={this.props.route.contactsPath}
                   router={this.props.router} />
     )
   }

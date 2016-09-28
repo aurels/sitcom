@@ -28,7 +28,7 @@ class BaseMain extends React.Component {
   }
 
   bindCable() {
-    App.cable.subscriptions.create({ channel: `${_.upperFirst(this.itemType)}sChannel`, lab_id: this.props.labId }, {
+    App.cable.subscriptions.create({ channel: `${_.upperFirst(this.itemType)}sChannel`, lab_id: this.props.route.labId }, {
       received: (data) => {
         var camelData = humps.camelizeKeys(data)
         var itemId    = camelData.action == 'destroy' ? camelData.itemId : camelData.item.id
@@ -99,7 +99,7 @@ class BaseMain extends React.Component {
   }
 
   reloadFromBackend(spinner = true) {
-    const itemsPath = this.props[`${this.itemType}sPath`]
+    const itemsPath = this.props.route[`${this.itemType}sPath`]
 
     if(spinner) {
       this.setState({ loaded: false })
@@ -123,12 +123,12 @@ class BaseMain extends React.Component {
   updateUrl(newValues) {
     var query        = _.assign({}, this.props.location.query, newValues)
     var paramsString = ParamsService.rejectEmptyParams($.param(query))
-    this.props.router.push(`${this.itemType}s?${paramsString}`)
+    this.props.route.router.push(`${this.itemType}s?${paramsString}`)
   }
 
   replaceUrl(newValues) {
     var paramsString = ParamsService.rejectEmptyParams($.param(newValues))
-    this.props.router.push(`${this.itemType}s?${paramsString}`)
+    this.props.route.router.push(`${this.itemType}s?${paramsString}`)
   }
 
   updateQuickSearch(newQuickSearch) {
@@ -167,7 +167,7 @@ class BaseMain extends React.Component {
   }
 
   render() {
-    const canRead = this.props.permissions[`canRead${_.upperFirst(this.itemType)}s`]
+    const canRead = this.props.route.permissions[`canRead${_.upperFirst(this.itemType)}s`]
 
     if(canRead) {
       var filters = this.getFilters()
@@ -205,11 +205,11 @@ class BaseMain extends React.Component {
   }
 
   renderSavedSearches() {
-    const pathPrefix        = this.props[`${this.itemType}sPath`]
+    const pathPrefix        = this.props.route[`${this.itemType}sPath`]
     const savedSearchesPath = `${pathPrefix}/saved_searches`
 
     return(
-      <this.SavedSearches router={this.props.router}
+      <this.SavedSearches router={this.props.route.router}
                           search={this.props.location.search}
                           itemType={this.itemType}
                           savedSearchesPath={savedSearchesPath} />
@@ -220,13 +220,13 @@ class BaseMain extends React.Component {
     return (
       <this.AdvancedSearch filters={filters}
                            updateFilters={this.updateFilters.bind(this)}
-                           tagOptionsPath={this.props.tagOptionsPath}
-                           fieldOptionsPath={this.props.fieldOptionsPath}
-                           contactOptionsPath={this.props.contactOptionsPath}
-                           organizationOptionsPath={this.props.organizationOptionsPath}
-                           projectOptionsPath={this.props.projectOptionsPath}
-                           eventOptionsPath={this.props.eventOptionsPath}
-                           organizationStatusesOptionsPath={this.props.organizationStatusesOptionsPath} />
+                           tagOptionsPath={this.props.route.tagOptionsPath}
+                           fieldOptionsPath={this.props.route.fieldOptionsPath}
+                           contactOptionsPath={this.props.route.contactOptionsPath}
+                           organizationOptionsPath={this.props.route.organizationOptionsPath}
+                           projectOptionsPath={this.props.route.projectOptionsPath}
+                           eventOptionsPath={this.props.route.eventOptionsPath}
+                           organizationStatusesOptionsPath={this.props.route.organizationStatusesOptionsPath} />
     )
   }
 
@@ -252,7 +252,7 @@ class BaseMain extends React.Component {
   }
 
   renderNewButton() {
-    if(this.props.permissions[`canWrite${_.upperFirst(this.itemType)}s`]) {
+    if(this.props.route.permissions[`canWrite${_.upperFirst(this.itemType)}s`]) {
       return (
         <button className="btn btn-primary new"
                 onClick={this.openNewModal.bind(this)}>

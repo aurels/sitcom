@@ -14,7 +14,7 @@ class Main extends BaseMain {
     this.newButtonLabel = 'Nouvelle organisation'
     this.SavedSearches  = SavedSearches
     this.AdvancedSearch = AdvancedSearch
-    this.exportUrl      = `${this.props.organizationsPath}/export`
+    this.exportUrl      = `${this.props.route.organizationsPath}/export`
 
     this.state = {
       organizations: [],
@@ -24,13 +24,13 @@ class Main extends BaseMain {
 
   getFilters() {
     return {
-      quickSearch:  this.props.location.query.quickSearch || '',
-      name:         this.props.location.query.name        || '',
-      status:       this.props.location.query.status      || '',
-      description:  this.props.location.query.description || '',
-      websiteUrl:   this.props.location.query.websiteUrl  || '',
-      notes:        this.props.location.query.notes       || '',
-      contactIds:   this.props.location.query.contactIds,
+      quickSearch: this.props.location.query.quickSearch || '',
+      name:        this.props.location.query.name        || '',
+      status:      this.props.location.query.status      || '',
+      description: this.props.location.query.description || '',
+      websiteUrl:  this.props.location.query.websiteUrl  || '',
+      notes:       this.props.location.query.notes       || '',
+      contactIds:  this.props.location.query.contactIds,
     }
   }
 
@@ -39,7 +39,7 @@ class Main extends BaseMain {
       <Organizations organizations={this.state.organizations}
                      loaded={this.state.loaded}
                      search={this.props.location.search}
-                     loadingImagePath={this.props.loadingImagePath} />
+                     loadingImagePath={this.props.route.loadingImagePath} />
     )
   }
 
@@ -50,14 +50,14 @@ class Main extends BaseMain {
     return (
       <Organization id={urlOrganizationId}
                     organization={organization}
-                    permissions={this.props.permissions}
-                    currentUserId={this.props.currentUserId}
-                    labId={this.props.labId}
+                    permissions={this.props.route.permissions}
+                    currentUserId={this.props.route.currentUserId}
+                    labId={this.props.route.labId}
                     loaded={this.state.loaded}
-                    organizationsPath={this.props.organizationsPath}
+                    organizationsPath={this.props.route.organizationsPath}
                     search={this.props.location.search}
-                    loadingImagePath={this.props.loadingImagePath}
-                    contactOptionsPath={this.props.contactOptionsPath}
+                    loadingImagePath={this.props.route.loadingImagePath}
+                    contactOptionsPath={this.props.route.contactOptionsPath}
                     organizations={this.state.organizations}
                     router={this.props.router} />
     )
@@ -65,7 +65,7 @@ class Main extends BaseMain {
 
   renderNewModal() {
     return (
-      <NewItem itemsPath={this.props.contactsPath}
+      <NewItem itemsPath={this.props.route.contactsPath}
                router={this.props.router}
                modalClassName="new-organization-modal"
                modalTitle="Nouvelle organisation"
