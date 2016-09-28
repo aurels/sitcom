@@ -44,8 +44,12 @@ class Main extends BaseMain {
   }
 
   renderItem() {
+    var urlOrganizationId = parseInt(this.props.params.id)
+    var organization      = _.find(this.state.organizations, (organization) => { return organization.id == urlOrganizationId } )
+
     return (
-      <Organization id={parseInt(this.props.params.id)}
+      <Organization id={urlOrganizationId}
+                    organization={organization}
                     permissions={this.props.permissions}
                     currentUserId={this.props.currentUserId}
                     labId={this.props.labId}
@@ -54,7 +58,6 @@ class Main extends BaseMain {
                     search={this.props.location.search}
                     loadingImagePath={this.props.loadingImagePath}
                     contactOptionsPath={this.props.contactOptionsPath}
-                    reloadIndexFromBackend={this.reloadFromBackend.bind(this)}
                     organizations={this.state.organizations}
                     router={this.props.router} />
     )
@@ -62,8 +65,7 @@ class Main extends BaseMain {
 
   renderNewModal() {
     return (
-      <NewItem reloadFromBackend={this.reloadFromBackend.bind(this)}
-               itemsPath={this.props.contactsPath}
+      <NewItem itemsPath={this.props.contactsPath}
                router={this.props.router}
                modalClassName="new-organization-modal"
                modalTitle="Nouvelle organisation"

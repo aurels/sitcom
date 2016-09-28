@@ -41,8 +41,12 @@ class Main extends BaseMain {
   }
 
   renderItem() {
+    var urlProjectId = parseInt(this.props.params.id)
+    var project      = _.find(this.state.projects, (project) => { return project.id == urlProjectId } )
+
     return (
-      <Project id={parseInt(this.props.params.id)}
+      <Project id={urlProjectId}
+               project={project}
                permissions={this.props.permissions}
                currentUserId={this.props.currentUserId}
                labId={this.props.labId}
@@ -51,7 +55,6 @@ class Main extends BaseMain {
                search={this.props.location.search}
                loadingImagePath={this.props.loadingImagePath}
                contactOptionsPath={this.props.contactOptionsPath}
-               reloadIndexFromBackend={this.reloadFromBackend.bind(this)}
                projects={this.state.projects}
                router={this.props.router} />
     )
@@ -59,8 +62,7 @@ class Main extends BaseMain {
 
   renderNewModal() {
     return (
-      <NewItem reloadFromBackend={this.reloadFromBackend.bind(this)}
-               itemsPath={this.props.projectsPath}
+      <NewItem itemsPath={this.props.projectsPath}
                router={this.props.router}
                modalClassName="new-project-modal"
                modalTitle="Nouveau projet"

@@ -41,19 +41,6 @@ class Main extends BaseMain {
     }
   }
 
-  applyNewContacts(contacts) {
-    var newContacts = this.state.contacts
-
-    contacts.forEach((contact) => {
-      var index = _.findIndex(newContacts, (c) => { return contact.id == c.id})
-      newContacts[index] = contact
-    })
-
-    this.setState({
-      contacts: newContacts,
-    })
-  }
-
   updateSelected(contact, newValue) {
     var index    = _.findIndex(this.state.contacts, (c) => { return contact.id == c.id})
     var contacts = this.state.contacts
@@ -76,8 +63,6 @@ class Main extends BaseMain {
                    results={this.state.contacts.length}
                    quickSearch={filters.quickSearch}
                    updateQuickSearch={this.updateQuickSearch.bind(this)}
-                   reloadIndexFromBackend={this.reloadFromBackend.bind(this)}
-                   applyNewContacts={this.applyNewContacts.bind(this)}
                    filters={filters}
                    exportUrl={this.exportUrl}
                    selectedCount={this.state.selectedCount}
@@ -96,15 +81,17 @@ class Main extends BaseMain {
                 loadingImagePath={this.props.loadingImagePath}
                 updateSelected={this.updateSelected.bind(this)}
                 pushTagIdsFilter={this.pushIdsListFilter.bind(this, 'tagIds')}
-                pushFieldIdsFilter={this.pushIdsListFilter.bind(this, 'fieldIds')}
-                applyNewContacts={this.applyNewContacts.bind(this)}
-                reloadIndexFromBackend={this.reloadFromBackend.bind(this)} />
+                pushFieldIdsFilter={this.pushIdsListFilter.bind(this, 'fieldIds')} />
     )
   }
 
   renderItem() {
+    var urlContactId = parseInt(this.props.params.id)
+    var contact      = _.find(this.state.contacts, (contact) => { return contact.id == urlContactId } )
+
     return (
-      <Contact id={parseInt(this.props.params.id)}
+      <Contact id={urlContactId}
+               contact={contact}
                permissions={this.props.permissions}
                currentUserId={this.props.currentUserId}
                labId={this.props.labId}
@@ -118,15 +105,13 @@ class Main extends BaseMain {
                projectOptionsPath={this.props.projectOptionsPath}
                eventOptionsPath={this.props.eventOptionsPath}
                contacts={this.state.contacts}
-               router={this.props.router}
-               reloadIndexFromBackend={this.reloadFromBackend.bind(this)} />
+               router={this.props.router} />
     )
   }
 
   renderNewModal() {
     return (
-      <NewContact reloadFromBackend={this.reloadFromBackend.bind(this)}
-                  contactsPath={this.props.contactsPath}
+      <NewContact contactsPath={this.props.contactsPath}
                   router={this.props.router} />
     )
   }

@@ -13,22 +13,22 @@ class Contact extends React.Component {
 
     this.state = {
       notFound:        false,
-      contact:         {},
-      loaded:          false,
+      contact:         this.props.contact,              // When coming from index and not direct link
+      loaded:          this.props.contact != undefined, //
       generalEditMode: false,
       socialEditMode:  false
     }
   }
 
   componentDidMount() {
-    this.reloadFromBackend()
-    this.bindCable()
-  }
-
-  componentDidUpdate(prevProps) {
-    if(prevProps.id != this.props.id) {
+    if(this.state.contact == undefined) {
       this.reloadFromBackend()
     }
+    else {
+      window.scrollTo(0, 0);
+    }
+
+    this.bindCable()
   }
 
   bindCable() {

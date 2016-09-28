@@ -24,6 +24,44 @@ class Project < ApplicationRecord
   validates :name, :presence   => { :message => "Le nom est obligatoire."  }
   validates :name, :uniqueness => { :message => "Le nom indiqué existe déjà." }
 
+  # Callbacks
+
+  after_commit   :after_create_callback, on: :create
+  after_commit   :after_update_callback, on: :update
+  around_destroy :around_destroy_callback
+
+  def after_create_callback
+    # websockets
+    cable_create
+    contacts.each(&:cable_update)
+
+    # elasticsearch
+    ReindexProjectWorker.perform_async(id)
+  end
+
+  def after_update_callback
+    # websockets
+    cable_update
+    contacts.each(&:cable_update)
+
+    # elasticsearch
+    ReindexProjectWorker.perform_async(id)
+  end
+
+  def around_destroy_callback
+    saved_id          = id
+    saved_contact_ids = contacts.pluck(:id)
+
+    yield
+
+    # websockets
+    cable_destroy
+    Contact.where(:id => saved_contact_ids).each(&:cable_update)
+
+    # elasticsearch
+    ReindexProjectWorker.perform_async(saved_id, 'delete', saved_contact_ids)
+  end
+
   # Methods
 
   def path
@@ -41,24 +79,5 @@ class Project < ApplicationRecord
       txt = "#{name.first}"
       "https://placeholdit.imgix.net/~text?txtsize=68&txt=#{txt}&w=200&h=200"
     end
-  end
-
-  def broadcast_create
-    cable_create
-    contacts.each(&:cable_update)
-  end
-
-  def broadcast_update
-    cable_update
-    contacts.each(&:cable_update)
-  end
-
-  def broadcast_destroy
-    saved_contact_ids = contacts.pluck(:id)
-
-    yield
-
-    cable_destroy
-    Contact.where(:id => saved_contact_ids).each(&:cable_update)
   end
 end

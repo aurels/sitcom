@@ -10,21 +10,40 @@ class Organization extends React.Component {
 
     this.state = {
       notFound:        false,
-      organization:    {},
-      loaded:          false,
+      organization:    this.props.organization,              // When coming from index and not direct link
+      loaded:          this.props.organization != undefined, //
       generalEditMode: false
     }
   }
 
   componentDidMount() {
-    this.reloadFromBackend()
+    if(this.state.organization == undefined) {
+      this.reloadFromBackend()
+    }
+    else {
+      window.scrollTo(0, 0);
+    }
+
+    this.bindCable()
   }
 
-  componentDidUpdate(prevProps) {
-     if(prevProps.id != this.props.id) {
-       this.reloadFromBackend()
-     }
-   }
+  bindCable() {
+    App.cable.subscriptions.create({ channel: "OrganizationsChannel", lab_id: this.props.labId }, {
+      received: (data) => {
+        var camelData = humps.camelizeKeys(data)
+        var itemId    = camelData.action == 'destroy' ? camelData.itemId : camelData.item.id
+
+        if(itemId == this.props.id) {
+          if(camelData.action == 'update') {
+            this.setState({ organization: camelData.item })
+          }
+          else {
+            this.setState({ notFound: true })
+          }
+        }
+      }
+    })
+  }
 
   organizationPath() {
     return this.props.organizationsPath + '/' + this.props.id
@@ -98,9 +117,7 @@ class Organization extends React.Component {
           <GeneralEdit organization={this.state.organization}
                        search={this.props.search}
                        organizationPath={this.organizationPath()}
-                       toggleEditMode={this.toggleGeneralEditMode.bind(this)}
-                       reloadFromBackend={this.reloadFromBackend.bind(this)}
-                       reloadIndexFromBackend={this.props.reloadIndexFromBackend} />
+                       toggleEditMode={this.toggleGeneralEditMode.bind(this)} />
         )
       }
       else {
@@ -110,9 +127,7 @@ class Organization extends React.Component {
                        search={this.props.search}
                        organizationPath={this.organizationPath()}
                        router={this.props.router}
-                       toggleEditMode={this.toggleGeneralEditMode.bind(this)}
-                       reloadFromBackend={this.reloadFromBackend.bind(this)}
-                       reloadIndexFromBackend={this.props.reloadIndexFromBackend} />
+                       toggleEditMode={this.toggleGeneralEditMode.bind(this)} />
         )
       }
     }
@@ -125,8 +140,6 @@ class Organization extends React.Component {
                        parentType="organization"
                        parentPath={this.organizationPath()}
                        optionsPath={this.props.contactOptionsPath}
-                       reloadFromBackend={this.reloadFromBackend.bind(this)}
-                       reloadIndexFromBackend={this.props.reloadIndexFromBackend}
                        canWrite={this.props.permissions.canWriteOrganizations} />
       )
     }

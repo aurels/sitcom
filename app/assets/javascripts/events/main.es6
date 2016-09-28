@@ -42,8 +42,12 @@ class Main extends BaseMain {
   }
 
   renderItem() {
+    var urlEventId = parseInt(this.props.params.id)
+    var event      = _.find(this.state.events, (event) => { return event.id == urlEventId } )
+
     return (
-      <Event id={parseInt(this.props.params.id)}
+      <Event id={urlEventId}
+             event={event}
              permissions={this.props.permissions}
              currentUserId={this.props.currentUserId}
              labId={this.props.labId}
@@ -52,7 +56,6 @@ class Main extends BaseMain {
              search={this.props.location.search}
              loadingImagePath={this.props.loadingImagePath}
              contactOptionsPath={this.props.contactOptionsPath}
-             reloadIndexFromBackend={this.reloadFromBackend.bind(this)}
              events={this.state.events}
              router={this.props.router} />
     )
@@ -60,8 +63,7 @@ class Main extends BaseMain {
 
   renderNewModal() {
     return (
-      <NewItem reloadFromBackend={this.reloadFromBackend.bind(this)}
-               itemsPath={this.props.eventsPath}
+      <NewItem itemsPath={this.props.eventsPath}
                router={this.props.router}
                modalClassName="new-event-modal"
                modalTitle="Nouvel évènement"

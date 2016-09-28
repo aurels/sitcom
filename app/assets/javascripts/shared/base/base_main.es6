@@ -36,7 +36,7 @@ class BaseMain extends React.Component {
         if(camelData.action == 'create') {
           setTimeout(() => {
             this.reloadFromBackend(false)
-          }, window.backendRefreshDelay)
+          }, window.backendRefreshDelay) // waiting for indexation, but not in a hurry
         }
         else if(camelData.action == 'update') {
           var newItems = this.state[`${this.itemType}s`]
@@ -235,7 +235,6 @@ class BaseMain extends React.Component {
                    results={this.state[`${this.itemType}s`].length}
                    quickSearch={filters.quickSearch}
                    updateQuickSearch={this.updateQuickSearch.bind(this)}
-                   reloadIndexFromBackend={this.reloadFromBackend.bind(this)}
                    filters={filters}
                    exportUrl={this.exportUrl} />
     )

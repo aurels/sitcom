@@ -21,19 +21,6 @@ module ProjectIndexConcern
         indexes :sort_name, :analyzer => :sortable_string_analyzer
       end
     end
-
-    after_commit   :after_commit_callback, on: [:create, :update]
-    around_destroy :around_destroy_callback
-  end
-
-  def after_commit_callback
-    ReindexProjectWorker.perform_async(id)
-  end
-
-  def around_destroy_callback
-    saved_contact_ids = contacts.pluck(:id)
-    yield
-    ReindexProjectWorker.perform_async(id, 'delete', saved_contact_ids)
   end
 
   def as_indexed_json(options = {})

@@ -3,15 +3,16 @@ class ReindexProjectWorker
   include Sidekiq::Worker
 
   def perform(id, action = 'update', contact_ids = [])
-    project = Project.find(id)
-
     if action == 'update'
+      project = Project.find(id)
+
       project.__elasticsearch__.index_document
       project.contacts.import
     else
-      project.__elasticsearch__.delete_document
+      index_name = Project.__elasticsearch__.index_name
+      Project.__elasticsearch__.client.delete :index => index_name, :type => 'project', :id => id
+
       Contact.where(:id => contact_ids).import
     end
   end
-
 end
